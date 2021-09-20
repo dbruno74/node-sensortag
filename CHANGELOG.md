@@ -1,3 +1,7 @@
+# Version 1.4.0
+
+ * Add support to CC1352 ([@dbruno74](https://github.com/dbruno74))
+ 
 # Version 1.3.0
 
  * Add support to CC2650 battery service ([@micahnyc](https://github.com/micahnyc))
