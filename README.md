@@ -3,7 +3,7 @@
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/sandeepmistry/node-sensortag?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 
-Node.js lib for the [TI SensorTag](http://www.ti.com/tool/cc2541dk-sensor) and [TI CC2650 SensorTag](http://www.ti.com/tool/cc2650stk)
+Node.js lib for the [TI SensorTag](http://www.ti.com/tool/cc2541dk-sensor), [TI CC2650 SensorTag](http://www.ti.com/tool/cc2650stk) and [TI CC1352 SensorTag](https://www.ti.com/tool/LPSTK-CC1352R)
 
 ## Prerequisites
 
@@ -145,24 +145,35 @@ sensorTag.enableAccelerometer(callback(error));
 sensorTag.disableAccelerometer(callback(error));
 
 // CC2540: period 1 - 2550 ms, default period is 2000 ms
-// CC2650: period 100 - 2550 ms, default period is 1000 ms
+// CC2650 and CC1352: period 100 - 2550 ms, default period is 1000 ms
 sensorTag.setAccelerometerPeriod(period, callback(error));
 ```
 
 #### Read
-
+CC2540 and CC2650:
 ```javascript
 sensorTag.readAccelerometer(callback(error, x, y, z));
 ```
 
 #### Notify/Unnotify
-
+CC2540 and CC2650:
 ```javascript
 sensorTag.notifyAccelerometer(callback(error));
 
 sensorTag.unnotifyAccelerometer(callback(error));
 
 sensorTag.on('accelerometerChange', callback(x, y, z));
+```
+
+CC1352:
+```javascript
+sensorTag.notifyAccelerometer(callback(error));
+
+sensorTag.unnotifyAccelerometer(callback(error));
+
+sensorTag.on('accelerometer_xChange', callback(x));
+sensorTag.on('accelerometer_yChange', callback(x));
+sensorTag.on('accelerometer_zChange', callback(x));
 ```
 
 ### Humidity Sensor
@@ -193,7 +204,7 @@ sensorTag.unnotifyHumidity(callback(error));
 sensorTag.on('humidityChange', callback(temperature, humidity));
 ```
 
-### Magnetometer
+### Magnetometer (TI SensorTag and TI CC2650 SensorTag only)
 
 #### Enable/disable
 
@@ -223,7 +234,7 @@ sensorTag.unnotifyMagnetometer(callback(error));
 sensorTag.on('magnetometerChange', callback(x, y, z));
 ```
 
-### Barometric Pressure Sensor
+### Barometric Pressure Sensor (TI SensorTag and TI CC2650 SensorTag only)
 
 #### Enable/disable
 
@@ -251,7 +262,7 @@ sensorTag.unnotifyBarometricPressure(callback(error));
 sensorTag.on('barometricPressureChange', callback(pressure));
 ```
 
-### Gyroscope
+### Gyroscope (TI SensorTag and TI CC2650 SensorTag only)
 
 #### Enable/disable/configure
 
@@ -296,7 +307,7 @@ sensorTag.readIoConfig(callback(error, value));
 sensorTag.writeIoConfig(value, callback(error));
 ```
 
-### Luxometer (CC2650 only)
+### Luxometer (CC2650 and CC1352 only)
 
 #### Enable/disable/configure
 
@@ -324,7 +335,7 @@ sensorTag.unnotifyLuxometer(callback(error));
 sensorTag.on('luxometerChange', callback(lux));
 ```
 
-### Battery Level (CC2650 only)
+### Battery Level (CC2650 and CC1352 only)
 
 #### Read
 
@@ -336,13 +347,13 @@ sensorTag.readBatteryLevel(callback(error, batteryLevel));
 
 #### Notify/Unnotify
 
+CC2540:
+
 ```javascript
 sensorTag.notifySimpleKey(callback(error));
 
 sensorTag.unnotifySimpleKey(callback(error));
 ```
-
-CC2540:
 
 ```javascript
 sensorTag.on('simpleKeyChange', callback(left, right));
@@ -351,5 +362,56 @@ sensorTag.on('simpleKeyChange', callback(left, right));
 CC2650:
 
 ```javascript
+sensorTag.notifySimpleKey(callback(error));
+
+sensorTag.unnotifySimpleKey(callback(error));
+```
+
+```javascript
 sensorTag.on('simpleKeyChange', callback(left, right, reedRelay));
+```
+
+CC1352:
+key:
+- 0 (left button)
+- 1 (right button)
+
+event:
+- 0x00 (released)
+- 0x01 (pressed)
+- 0xB1 (hold)
+
+```javascript
+sensorTag.notifyButton(callback(error));
+
+sensorTag.unnotifyButton(callback(error));
+```
+
+```javascript
+sensorTag.on('button_0Change', callback(key, event));
+```
+
+```javascript
+sensorTag.on('button_1Change', callback(key, event));
+```
+
+```javascript
+sensorTag.on('button_2Change', callback(key, event));
+```
+
+
+### LEDs (C1352 only)
+ledNum:
+- 0 (red)
+- 1 (green)
+- 2 (blue)
+
+#### Switch on
+```javascript
+sensorTag.writeLed(ledNum, 1);
+```
+
+#### Switch off
+```javascript
+sensorTag.writeLed(ledNum, 0);
 ```
